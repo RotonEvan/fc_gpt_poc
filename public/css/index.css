@@ -1,0 +1,188 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* height: 100vh; */
+    align-items: center;
+    /* background-color: rgb(228, 228, 233); */
+    background: rgb(189, 195, 199);
+    background: radial-gradient(circle, rgba(189, 195, 199, 0.4) 0%, rgba(44, 62, 80, 0.6) 100%);
+}
+
+.name-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    margin-top: 40vh;
+    margin-bottom: 2rem;
+}
+
+.name-container h1 {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 5rem;
+    color: rgb(100, 100, 100);
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    /* Add drop shadow */
+}
+
+.name-container h4 {
+    font-family: 'Josefin Sans', serif;
+    font-size: 1.2rem;
+    color: rgb(100, 100, 100);
+    margin: 0;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: rgb(228, 228, 233);
+    padding: 5px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -6px -6px 10px rgba(255, 255, 255, 0.3);
+    margin: 10px;
+    position: relative;
+    transition: width 0.6s;
+}
+
+.magnifier {
+    width: 25px;
+    cursor: pointer;
+    margin: auto;
+    position: absolute;
+    right: 15px;
+    z-index: 99;
+    transition: 2s all ease;
+}
+
+.magnifier:hover {
+    transform: scale(1.1);
+}
+
+.attach {
+    cursor: pointer;
+    width: 0;
+    position: absolute;
+    left: 20px;
+    transition: width 0.8s;
+    transition-delay: 0.2s;
+}
+
+.input {
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    margin: 10px 50px;
+    outline: none;
+    color: rgb(100, 100, 100);
+    transition: width 0.5s;
+    transition-delay: 0.4s;
+}
+
+.active.search-bar-container {
+    width: 400px;
+}
+
+.active .input {
+    width: 100%;
+}
+
+.active .mic-icon {
+    width: 30px;
+}
+
+.analysis-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.analysis-text {
+    display: none;
+}
+
+#paper {
+    color: #FFF;
+    font-size: 20px;
+}
+
+#text {
+    width: 1000px;
+    overflow: hidden;
+    background-color: rgb(228, 228, 233);
+    /* background-color: #FFF; */
+    color: #222;
+    font-family: Courier, monospace;
+    font-weight: normal;
+    font-size: 18px;
+    resize: none;
+    line-height: 30px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 45px;
+    padding-bottom: 34px;
+    /* background-image: ; */
+    background-repeat: repeat-y, repeat;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    -webkit-box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -6px -6px 10px rgba(255, 255, 255, 0.3);
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2), -6px -6px 10px rgba(255, 255, 255, 0.3);
+    border: 1px solid transparent;
+}
+
+.spinner {
+    display: none;
+}
+
+#loading-bar-spinner.spinner {
+    /* left: 5%; */
+    /* margin-left: -20px; */
+    /* top: 10%; */
+    /* margin-top: -20px; */
+    position: relative;
+    left: 4rem;
+    z-index: 19 !important;
+    -webkit-animation: loading-bar-spinner 400ms linear infinite;
+    animation: loading-bar-spinner 400ms linear infinite;
+}
+
+#loading-bar-spinner.spinner .spinner-icon {
+    width: 25px;
+    height: 25px;
+    border: solid 4px transparent;
+    border-top-color: #1b1b1b !important;
+    border-left-color: #1b1b1b !important;
+    border-radius: 50%;
+}
+
+@-webkit-keyframes loading-bar-spinner {
+    0% {
+        transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loading-bar-spinner {
+    0% {
+        transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
