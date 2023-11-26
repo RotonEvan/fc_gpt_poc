@@ -186,3 +186,10 @@ body {
         transform: rotate(360deg);
     }
 }
+
+.pending-text {
+    font-size: 10px;
+    color: rgb(69, 69, 69);
+    text-align: left;
+    transition: 0.5s all ease;
+}

@@ -13,8 +13,20 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 const app = express()
 const port = process.env.PORT || 3000
-import routes from './src/routes.js'
+import router from './src/routes.js'
 import cors from 'cors';
+
+import http from 'http';
+import { Server } from 'socket.io';
+const server = http.createServer(app);
+const io = new Server(server);
+
+global.clients = {};
+global.tasks = {};
+
+// setInterval(() => {
+//     console.log(global.clients);
+// }, 1000);
 
 app.use(cors())
 app.use(cookieParser());
@@ -23,12 +35,24 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(express.static('public'));
 
-app.use('/api', routes);
+app.use('/api', router);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/views/index.html');
 });
 
-app.listen(port, () => {
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('new_client', (data) => {
+        console.log(data);
+        global.clients[data] = { socket: socket, pending_tasks: [], completed_tasks: [] };
+        // console.log(clients);
+    });
+    socket.on('disconnect', () => {
+        console.log("user disconnected");
+    });
+});
+
+server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 });

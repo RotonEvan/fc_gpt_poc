@@ -1,25 +1,10 @@
 let converter = new showdown.Converter();
+let socket = io();
+let pending_task_interval;
 
 window.onload = function() {
-    // let fc_submit = document.getElementById('fc_submit');
-    // let fc_url = document.getElementById('fc_url');
-
-    // fc_submit.addEventListener('click', async function() {
-    //     console.log(fc_url.value);
-    // axios({
-    //         method: 'post',
-    //         url: '/api/url',
-    //         data: {
-    //             url: fc_url.value
-    //         }
-    //     })
-    //     .then(function(response) {
-    //         console.log(response);
-    //     })
-    //     .catch(function(error) {
-    //         console.log(error);
-    //     })
-    // });
+    const clientID = uuidv4();
+    socket.emit('new_client', clientID);
 
     const search = document.querySelector(".search-bar-container");
     const magnifier = document.querySelector(".magnifier");
@@ -58,6 +43,26 @@ window.onload = function() {
         return Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) / 100;
     }
 
+    socket.on('task_progress', (data) => {
+        document.querySelector('.pending-text').innerHTML = "Learning about " + data.topic + " " + data.progress + "%";
+    });
+
+    socket.on('task_completed', (data) => {
+        clearInterval(pending_task_interval);
+        document.querySelector('.pending-text').innerHTML = "";
+        let taskID = data.taskID;
+        let analysis = data.analysis;
+        analysistext.style.display = 'block';
+        analysistext.innerHTML = converter.makeHtml(analysis);
+        analysistext.style.height = 'auto';
+        analysistext.style.height = analysistext.scrollHeight + 'px';
+        window.scrollTo(0, 30 * getVH(), {
+            behavior: 'smooth'
+        });
+        // console.log(response);
+        document.querySelector('.spinner').style.display = 'none';
+    });
+
     magnifier.addEventListener("click", (e) => {
         document.querySelector('.spinner').style.display = 'inline-block';
         let val = input.value;
@@ -73,19 +78,28 @@ window.onload = function() {
                 url: '/api/url',
                 data: {
                     url: input.value,
-                    urlFlag: urlFlag
+                    urlFlag: urlFlag,
+                    clientID: clientID,
+                    taskID: uuidv4()
                 }
             })
             .then(function(response) {
-                analysistext.style.display = 'block';
-                analysistext.innerHTML = converter.makeHtml(response.data.analysis);
-                analysistext.style.height = 'auto';
-                analysistext.style.height = analysistext.scrollHeight + 'px';
-                window.scrollTo(0, 30 * getVH(), {
-                    behavior: 'smooth'
-                });
-                console.log(response);
-                document.querySelector('.spinner').style.display = 'none';
+                // analysistext.style.display = 'block';
+                // analysistext.innerHTML = converter.makeHtml(response.data.topic);
+                // analysistext.style.height = 'auto';
+                // analysistext.style.height = analysistext.scrollHeight + 'px';
+                // window.scrollTo(0, 30 * getVH(), {
+                //     behavior: 'smooth'
+                // });
+                // console.log(response);
+                // document.querySelector('.spinner').style.display = 'none';
+                document.querySelector('.pending-text').innerHTML = "Learning about " + response.data.topic + " 5%";
+                // fade in and out pending text every 1 second
+                let opacity = 0;
+                pending_task_interval = setInterval(() => {
+                    document.querySelector('.pending-text').style.opacity = opacity;
+                    opacity = 1 - opacity;
+                }, 1000);
             })
             .catch(function(error) {
                 console.log(error);

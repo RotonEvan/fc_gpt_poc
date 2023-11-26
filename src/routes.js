@@ -31,7 +31,7 @@ function getContent(url) {
     return cnt;
 }
 
-async function pipeline(content, topic, prompts) {
+async function pipeline(content, topic, prompts, clientID, taskID) {
     let model3 = "gpt-3.5-turbo";
     let model4 = "gpt-4-1106-preview"
 
@@ -44,6 +44,8 @@ async function pipeline(content, topic, prompts) {
         }
     }
     // console.log(sites);
+
+    global.clients[clientID].socket.emit('task_progress', { taskID: taskID, topic, progress: 25 });
 
     // get content from sites
     let contents = "";
@@ -58,6 +60,8 @@ async function pipeline(content, topic, prompts) {
     }
     console.log(contents.length);
     console.log(sites_completed);
+
+    global.clients[clientID].socket.emit('task_progress', { taskID: taskID, topic, progress: 50 });
 
     // break into 10000 character chunks and create messages for GPT
     let messages2 = [
@@ -84,6 +88,10 @@ async function pipeline(content, topic, prompts) {
 router.post('/url', async(req, res) => {
     // get url sent from client in body as json
     const url = req.body.url;
+    const clientID = req.body.clientID;
+    const taskID = req.body.taskID;
+    global.clients[clientID].pending_tasks.push(taskID);
+    global.tasks[taskID] = { clientID: clientID, status: "pending" };
     console.log(url);
     let content;
     if (req.body.urlFlag) {
@@ -112,10 +120,14 @@ router.post('/url', async(req, res) => {
     let prompts = resp.prompts;
     console.log(topic);
     console.log(prompts);
-    // res.write(JSON.stringify({ topic, prompts }));
-
-    const analysis = await pipeline(content, topic, prompts);
-    res.json({ analysis });
+    res.json({ topic, prompts });
+    global.clients[clientID].socket.emit('task_progress', { taskID: taskID, topic, progress: 25 });
+    const analysis = await pipeline(content, topic, prompts, clientID, taskID);
+    global.tasks[taskID].status = "completed";
+    global.clients[clientID].completed_tasks.push(taskID);
+    global.clients[clientID].pending_tasks.splice(global.clients[clientID].pending_tasks.indexOf(taskID), 1);
+    global.clients[clientID].socket.emit('task_completed', { taskID: taskID, analysis: analysis });
+    // res.json({ analysis });
 });
 
 export default router;
