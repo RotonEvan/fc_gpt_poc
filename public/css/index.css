@@ -22,9 +22,9 @@ body {
 }
 
 .name-container h1 {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Nova Square', sans-serif;
     font-size: 5rem;
-    color: rgb(100, 100, 100);
+    color: rgb(41, 41, 41);
     margin: 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     /* Add drop shadow */
@@ -33,7 +33,7 @@ body {
 .name-container h4 {
     font-family: 'Josefin Sans', serif;
     font-size: 1.2rem;
-    color: rgb(100, 100, 100);
+    color: rgb(41, 41, 41);
     margin: 0;
 }
 
